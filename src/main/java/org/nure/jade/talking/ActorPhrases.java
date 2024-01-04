@@ -1,4 +1,4 @@
-package org.nure.jade.speech;
+package org.nure.jade.talking;
 
 import java.util.List;
 

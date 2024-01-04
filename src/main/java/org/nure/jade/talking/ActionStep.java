@@ -1,4 +1,4 @@
-package org.nure.jade.speech;
+package org.nure.jade.talking;
 
 public class ActionStep {
     public static final int ASK_ENV_STATE = 0;

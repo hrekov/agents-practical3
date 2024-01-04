@@ -1,4 +1,4 @@
-package org.nure.jade.speech;
+package org.nure.jade.talking;
 
 public class PerceptKeyWord {
         public static final String breeze = "breeze";

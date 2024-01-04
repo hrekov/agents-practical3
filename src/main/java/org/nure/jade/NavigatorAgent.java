@@ -14,8 +14,8 @@ import org.nure.core.environment.wumpusworld.AgentPosition;
 import org.nure.core.environment.wumpusworld.EfficientHybridWumpusAgent;
 import org.nure.core.environment.wumpusworld.WumpusAction;
 import org.nure.core.environment.wumpusworld.WumpusPercept;
-import org.nure.jade.speech.INavigatorSpeech;
-import org.nure.jade.speech.NavigatorSpeech;
+import org.nure.jade.talking.INavigatorSpeech;
+import org.nure.jade.talking.NavigatorSpeech;
 
 public class NavigatorAgent extends Agent {
 	private static final String agentMessagePrefix = "Navigator-agent: ";
@@ -69,10 +69,35 @@ public class NavigatorAgent extends Agent {
 		}
 	}
 
+	private class FindActionBehaviour extends OneShotBehaviour {
+		WumpusPercept percept;
+
+		FindActionBehaviour(WumpusPercept percept) {
+			this.percept = percept;
+		}
+
+		@Override
+		public void action() {
+			final var action = agent.act(percept).orElseThrow();
+			final var reply = new ACLMessage(ACLMessage.PROPOSE);
+
+			System.out.println(agentMessagePrefix + "decided on action. Action = " + action);
+
+			final var actionSentence = speech.tellAction(action);
+
+			reply.setLanguage("English");
+			reply.setOntology("WumpusWorld");
+			reply.setContent(actionSentence);
+			reply.addReplyTo(speleologistAid);
+			reply.addReceiver(speleologistAid);
+
+			myAgent.send(reply);
+		}
+	}
+
 	private class ListenBehavior extends CyclicBehaviour {
 		@Override
 		public void action() {
-			//query - propose
 			MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 			ACLMessage msg = myAgent.receive(mt);
 			if(msg != null) {
@@ -83,28 +108,6 @@ public class NavigatorAgent extends Agent {
 			} else {
 				block();
 			}
-		}
-	}
-
-	private class FindActionBehaviour extends OneShotBehaviour {
-		WumpusPercept percept;
-
-		FindActionBehaviour(WumpusPercept percept) {
-			this.percept = percept;
-		}
-
-		@Override
-		public void action() {
-			WumpusAction action = agent.act(percept).orElseThrow();
-			ACLMessage reply = new ACLMessage(ACLMessage.PROPOSE);
-			System.out.println(agentMessagePrefix + "decided on action. Action = " + action);
-			String actionSentence = speech.tellAction(action);
-			reply.setLanguage("English");
-			reply.setOntology("WumpusWorld");
-			reply.setContent(actionSentence);
-			reply.addReplyTo(speleologistAid);
-			reply.addReceiver(speleologistAid);
-			myAgent.send(reply);
 		}
 	}
 }

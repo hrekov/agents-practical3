@@ -14,10 +14,10 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.wrapper.ControllerException;
 import org.nure.core.environment.wumpusworld.WumpusAction;
-import org.nure.jade.speech.SpeleologistSpeech;
-import org.nure.jade.speech.ISpeleologistSpeech;
+import org.nure.jade.talking.SpeleologistSpeech;
+import org.nure.jade.talking.ISpeleologistSpeech;
 
-import static org.nure.jade.speech.ActionStep.*;
+import static org.nure.jade.talking.ActionStep.*;
 
 public class SpeleologistAgent extends Agent {
 	private ISpeleologistSpeech speech;

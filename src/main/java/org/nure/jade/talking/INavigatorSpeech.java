@@ -1,4 +1,4 @@
-package org.nure.jade.speech;
+package org.nure.jade.talking;
 
 import org.nure.core.environment.wumpusworld.WumpusAction;
 import org.nure.core.environment.wumpusworld.WumpusPercept;

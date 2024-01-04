@@ -1,4 +1,4 @@
-package org.nure.jade.speech;
+package org.nure.jade.talking;
 
 public final class ActionKeyWord {
     public static final String turnLeft = "left";
