@@ -10,12 +10,9 @@ import org.nure.core.environment.wumpusworld.WumpusAction;
 import org.nure.core.environment.wumpusworld.WumpusPercept;
 
 public class SpeleologistSpeech implements ISpeleologistSpeech {
-	private final Random randomGenerator;
 	private final Map<String, WumpusAction> actionKeyWords;
 
 	public SpeleologistSpeech() {
-		randomGenerator = new Random();
-
 		actionKeyWords = new HashMap<>();
 		actionKeyWords.put(ActionKeyWord.turnLeft, WumpusAction.TURN_LEFT);
 		actionKeyWords.put(ActionKeyWord.turnRight, WumpusAction.TURN_RIGHT);
@@ -41,34 +38,29 @@ public class SpeleologistSpeech implements ISpeleologistSpeech {
 		final List<String> feelings = new ArrayList<>();
 
 		if(percept.isBreeze()) {
-			feelings.add(getSentence(ActorPhrases.SpeleologistPhrases.pitNear));
+			feelings.add(ActorPhrases.SpeleologistPhrases.pitNear);
 		}
 
 		if(percept.isStench()) {
-			feelings.add(getSentence(ActorPhrases.SpeleologistPhrases.wumpusNear));
+			feelings.add(ActorPhrases.SpeleologistPhrases.wumpusNear);
 		}
 
 		if(percept.isGlitter()) {
-			feelings.add(getSentence(ActorPhrases.SpeleologistPhrases.goldNear));
+			feelings.add(ActorPhrases.SpeleologistPhrases.goldNear);
 		}
 
 		if(percept.isBump()) {
-			feelings.add(getSentence(ActorPhrases.SpeleologistPhrases.wallNear));
+			feelings.add(ActorPhrases.SpeleologistPhrases.wallNear);
 		}
 
 		if(percept.isScream()) {
-			feelings.add(getSentence(ActorPhrases.SpeleologistPhrases.wumpusKilledNear));
+			feelings.add(ActorPhrases.SpeleologistPhrases.wumpusKilledNear);
 		}
 
 		if(feelings.isEmpty()) {
-			feelings.add(getSentence(ActorPhrases.SpeleologistPhrases.nothing));
+			feelings.add(ActorPhrases.SpeleologistPhrases.nothing);
 		}
 
 		return String.join(". ", feelings);
-	}
-
-	private String getSentence(List<String> sentences) {
-		int index = randomGenerator.nextInt(sentences.size());
-		return sentences.get(index);
 	}
 }
