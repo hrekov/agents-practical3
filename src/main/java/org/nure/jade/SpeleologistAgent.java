@@ -66,7 +66,7 @@ public class SpeleologistAgent extends Agent {
 		ObjectMapper objectMapper = new ObjectMapper();
 		private MessageTemplate mt;
 		private State currentState;
-		private int step = 0;
+		private int step = ASK_ENV_STATE;
 
 		private void discover() {
             DFAgentDescription template = new DFAgentDescription();
@@ -123,7 +123,7 @@ public class SpeleologistAgent extends Agent {
 						throw new RuntimeException(e);
 					}
 				}
-				step = 2;
+				step = SEND_STATE_TO_NAVIGATOR;
 				return;
 			}
 
@@ -146,7 +146,7 @@ public class SpeleologistAgent extends Agent {
 					MessageTemplate.MatchReplyTo(new AID[]{myAgent.getAID()}));
 
 			System.out.println(agentMessagePrefix + "Sent state to the navigator agent");
-			step = 3;
+			step = RECEIVE_NEW_NAVIGATOR_ACTION;
 		}
 
 		private void receiveNewNavigatorAction() {
@@ -155,7 +155,7 @@ public class SpeleologistAgent extends Agent {
 				String action = reply2.getContent();
 				wumpusAction = speech.recognizeAction(action);
 				System.out.println(agentMessagePrefix + "Received new action from navigator = " + action);
-				step = 4;
+				step = SEND_ACTION_TO_ENV;
 				return;
 			}
 
@@ -174,7 +174,7 @@ public class SpeleologistAgent extends Agent {
 					MessageTemplate.MatchReplyTo(new AID[]{myAgent.getAID()})
 			);
 
-			step = 5;
+			step = RECEIVE_OK_FROM_ENV;
 		}
 
 		private void receiveOkFromEnv() {
@@ -183,10 +183,10 @@ public class SpeleologistAgent extends Agent {
 				if(envReply.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
 					if(WumpusAction.CLIMB.equals(wumpusAction)) {
 						System.out.println(agentMessagePrefix + "Climbed out of the cave.");
-						step = 6;
+						step = GAME_IS_ENDED;
 					} else {
 						System.out.println(agentMessagePrefix + "Going to the zero step.");
-						step = 0;
+						step = ASK_ENV_STATE;
 					}
 
 				}

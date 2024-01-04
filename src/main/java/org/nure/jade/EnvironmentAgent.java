@@ -29,6 +29,44 @@ public class EnvironmentAgent extends Agent {
 	private WumpusPercept percept;
 	private int tick = 0;
 
+	private class AcceptBehaviour extends OneShotBehaviour {
+		@Override
+		public void action() {
+			ACLMessage report = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+			report.setContent("OK");
+			report.addReceiver(speleologistAID);
+			report.addReplyTo(speleologistAID);
+
+			System.out.println(agentMessagePrefix + "step performed.");
+
+			myAgent.send(report);
+		}
+	}
+
+
+	private class QueryBehaviour extends OneShotBehaviour {
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		@Override
+		public void action() {
+			AgentPosition agentPosition = wumpusEnvironment.getAgentPosition(speleologist);
+			percept = wumpusEnvironment.getPerceptSeenBy(speleologist);
+			ACLMessage report = new ACLMessage(ACLMessage.INFORM);
+
+			try {
+				report.setContent(objectMapper.writeValueAsString(new State(percept, tick++)));
+			} catch (JsonProcessingException e) {
+				throw new RuntimeException(e);
+			}
+
+			report.addReceiver(speleologistAID);
+			report.addReplyTo(speleologistAID);
+			myAgent.send(report);
+			System.out.println(agentMessagePrefix + "percept sent to speleologist");
+			System.out.println(agentMessagePrefix + "current position: " + agentPosition);
+		}
+	}
+
 	@Override
 	protected void takeDown() {
 		System.out.println(agentMessagePrefix + getAID().getName() + " terminating.");
@@ -39,8 +77,8 @@ public class EnvironmentAgent extends Agent {
 		registerMe();
 		wumpusEnvironment = new WumpusEnvironment(new WumpusCave(4, 4, ""
 				+ ". . . P "
-				+ "W G P . "
-				+ ". . . . "
+				+ "P G . . "
+				+ "P . . W "
 				+ "S . P . "));
 
 		speleologist = new EfficientHybridWumpusAgent(4, 4, new AgentPosition(1, 1, AgentPosition.Orientation.FACING_NORTH));
@@ -96,43 +134,6 @@ public class EnvironmentAgent extends Agent {
 			} else {
 				block();
 			}
-		}
-	}
-
-	private class QueryBehaviour extends OneShotBehaviour {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		@Override
-		public void action() {
-			AgentPosition agentPosition = wumpusEnvironment.getAgentPosition(speleologist);
-			percept = wumpusEnvironment.getPerceptSeenBy(speleologist);
-			ACLMessage report = new ACLMessage(ACLMessage.INFORM);
-
-            try {
-                report.setContent(objectMapper.writeValueAsString(new State(percept, tick++)));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-
-            report.addReceiver(speleologistAID);
-			report.addReplyTo(speleologistAID);
-			myAgent.send(report);
-			System.out.println(agentMessagePrefix + "percept sent to speleologist");
-			System.out.println(agentMessagePrefix + "current position: " + agentPosition);
-		}
-	}
-
-	private class AcceptBehaviour extends OneShotBehaviour {
-		@Override
-		public void action() {
-			ACLMessage report = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-			report.setContent("OK");
-			report.addReceiver(speleologistAID);
-			report.addReplyTo(speleologistAID);
-
-			System.out.println(agentMessagePrefix + "step performed.");
-
-			myAgent.send(report);
 		}
 	}
 }
