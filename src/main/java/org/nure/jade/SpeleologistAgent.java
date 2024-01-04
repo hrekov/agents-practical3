@@ -20,9 +20,6 @@ import org.nure.jade.speech.ISpeleologistSpeech;
 import static org.nure.jade.speech.ActionStep.*;
 
 public class SpeleologistAgent extends Agent {
-	private static final String agentMessagePrefix = "Speleologist-agent: ";
-	private AID environmentAid;
-	private AID navigatorAid;
 	private ISpeleologistSpeech speech;
 
 	@Override
@@ -237,4 +234,8 @@ public class SpeleologistAgent extends Agent {
 			return step == 7;
 		}
 	}
+
+	private static final String agentMessagePrefix = "Speleologist-agent: ";
+	private AID environmentAid;
+	private AID navigatorAid;
 }
